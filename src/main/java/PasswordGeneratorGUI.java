@@ -3,10 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-// render the GUI Components (frontend)
+// rendering the GUI Components (frontend)
 // this class will inherit from the JFrame class
 public class PasswordGeneratorGUI extends JFrame {
     private PasswordGenerator passwordGenerator;
+    private ClipboardUtility clipboardUtility;
 
     public PasswordGeneratorGUI(){
         // render frame and add a title
@@ -29,6 +30,8 @@ public class PasswordGeneratorGUI extends JFrame {
 
         // init password generator
         passwordGenerator = new PasswordGenerator();
+        // init clipboardCopy button
+        clipboardUtility = new ClipboardUtility();
 
         // render GUI components
         addGuiComponents();
@@ -37,31 +40,19 @@ public class PasswordGeneratorGUI extends JFrame {
     private void addGuiComponents(){
         // create title text
         JLabel titleLabel = new JLabel("Password Generator");
-
-        // increase the font size and make it bold
         titleLabel.setFont(new Font("Dialog", Font.BOLD, 32));
-
-        // center the text to the screen
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        // set x,y coordinates and width/height values
         titleLabel.setBounds(0, 10, 540, 39);
-
-        // add to GUI
         add(titleLabel);
 
         // create result text area
         JTextArea passwordOutput = new JTextArea();
-
-        // prevent editing the text area
         passwordOutput.setEditable(false);
         passwordOutput.setFont(new Font("Dialog", Font.BOLD, 32));
 
-        // add scrollability in case output becomes too big
+        // adding scrollability in case output becomes too big
         JScrollPane passwordOutputPane = new JScrollPane(passwordOutput);
         passwordOutputPane.setBounds(25, 97, 479, 70);
-
-        // create a black border around the text area
         passwordOutputPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         add(passwordOutputPane);
 
@@ -70,6 +61,20 @@ public class PasswordGeneratorGUI extends JFrame {
         passwordLengthLabel.setFont(new Font("Dialog", Font.PLAIN, 32));
         passwordLengthLabel.setBounds(25, 215, 272, 39);
         add(passwordLengthLabel);
+
+        // creating button for copying the result to clipboard
+        JButton copyToClipboard = new JButton("Copy");
+        copyToClipboard.setFont(new Font("Dialog", Font.PLAIN, 20));
+        copyToClipboard.setBounds(180, 180, 150, 20);
+        copyToClipboard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ClipboardUtility.copyToClipboard(passwordOutput.getText());
+                JOptionPane.showMessageDialog(null, "Password copied to clipboard!");
+            }
+        });
+        add(copyToClipboard);
+
 
         // create password length input
         JTextArea passwordLengthInputArea = new JTextArea();
